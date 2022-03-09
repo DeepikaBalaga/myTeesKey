@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">mytees POC</string>
+    <string name="mytees_ekey">mytees eKey</string>
+    <string name="alexa_integration_poc">Alexa Integration POC</string>
+    <string name="please_select_your_role">Please select your role</string>
+    <string name="already_have_mytees_account">Already have a mytees account?</string>
+</resources>
