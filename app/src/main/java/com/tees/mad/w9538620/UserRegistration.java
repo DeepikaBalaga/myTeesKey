@@ -172,10 +172,10 @@ public class UserRegistration extends AppCompatActivity {
                     + "&address=" + add
                     + "&lockdetails=" + nameLock;
         } else {
-            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/register?emailed=" + mail
+            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/registeragent?emailed=" + mail
                     + "&password=" + pwd
                     + "&username=" + username
-                    + "&agentCode=" + agentcode;
+                    + "&code=" + agentcode;
         }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
