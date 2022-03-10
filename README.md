@@ -13,3 +13,6 @@ commit 4:
 	-> created new API and changed the url in app code
 	-> as there is issue with variable name missmatch internal server error at app side
 	-> error com.android.volley.ServerError resolved
+
+commit 5:
+	-> renamed repo
