@@ -68,7 +68,7 @@ public class UserRegistration extends AppCompatActivity {
         editor = sharedpreferences.edit();
 
         verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
-        Log.d(TAG, "verifyOwner = " + verifyOwner);
+        Log.d(TAG, "verifyOwner : UserRegistration = " + verifyOwner);
 
         if (verifyOwner) {
             code_layout.setVisibility(View.GONE);

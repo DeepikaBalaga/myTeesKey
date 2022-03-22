@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import com.tees.mad.w9538620.MainActivity;
+
 public class UserLogin extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -51,9 +53,11 @@ public class UserLogin extends AppCompatActivity {
         editor = sharedpreferences.edit();
 
         verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
-        Log.d(TAG, "verifyOwner = " + verifyOwner);
+        Log.d(TAG, "verifyOwner:: Userlogin = " + verifyOwner);
+
 
         String title = (verifyOwner ? "Owner" : "Listing Agent") + " - Login";
+
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setTitle(title);
 
@@ -101,7 +105,7 @@ public class UserLogin extends AppCompatActivity {
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(UserLogin.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/userlogin-get?emailId=" + mail
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/login?emailed=" + mail
                 + "&password=" + pwd;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -153,31 +157,47 @@ public class UserLogin extends AppCompatActivity {
     }
 
     private void saveUserData(String response) {
-        try {
-            JSONObject sys = new JSONObject(response);
-            String username = sys.getString("username");
-            String emailId = sys.getString("emailId");
-
-            String verifyOwnerOrAgent = sys.getString("verifyOwner");
-            String address = "", lockdetails = "", agentCode = "";
-            if (verifyOwner) {
-                address = sys.getString("address");
-                lockdetails = sys.getString("lockdetails");
-            } else {
-                agentCode = sys.getString("agentCode");
-            }
-
-            editor.putString("username", username);
-            editor.putString("emailId", emailId);
-            editor.putString("address", address);
-            editor.putString("lockdetails", lockdetails);
-            editor.putBoolean("verifyOwner", !verifyOwnerOrAgent.equals("0"));
-            editor.putString("agentCode", agentCode);
-            editor.putBoolean("isLoggedIn", true);
-            editor.commit();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Log.d(TAG, "verifyOwner:: Userlogin:saveUserData = " + verifyOwner);
+        editor.putBoolean("verifyOwner", verifyOwner);
+        editor.commit();
+        verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
+        Log.d(TAG, "verifyOwner:: after commit = " + verifyOwner);
+//        try {
+//            JSONObject sys = new JSONObject(response);
+//
+//
+//
+//            verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
+//
+//            Log.d(TAG, "verifyOwner : after" + verifyOwner);
+//
+//
+//            String verifyOwnerOrAgent = sys.getString("verifyOwner");
+//            Log.d(TAG, "verifyOwner:: verifyOwnerOrAgent = " + verifyOwnerOrAgent);
+//
+//
+//            String username = sys.getString("username");
+//            String emailId = sys.getString("emailId");
+//
+//
+//            String address = "", lockdetails = "", agentCode = "";
+//            if (verifyOwner) {
+//                address = sys.getString("address");
+//                lockdetails = sys.getString("lockdetails");
+//            } else {
+//                agentCode = sys.getString("agentCode");
+//            }
+//
+//            editor.putString("username", username);
+//            editor.putString("emailId", emailId);
+//            editor.putString("address", address);
+//            editor.putString("lockdetails", lockdetails);
+//            editor.putString("agentCode", agentCode);
+//            editor.putBoolean("isLoggedIn", true);
+//            //editor.commit();
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 }

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.otpSharing)
     MaterialCardView otpSharingCard;
     @BindView(R.id.accessdisable)
-    MaterialCardView accessdisableCard;
+    MaterialCardView accessisableCard;
     @BindView(R.id.logsAccess)
     MaterialCardView logsAccessCard;
     @BindView(R.id.agentMail)
@@ -106,8 +106,9 @@ public class MainActivity extends AppCompatActivity {
         clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         clip = ClipData.newPlainText("", "");
 
-        // verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
-        Log.d(TAG, "verifyOwner = " + verifyOwner);
+//        verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
+        verifyOwner = sharedpreferences.getBoolean("verifyOwner", false);
+        Log.d(TAG, "verifyOwner : MainActivity = " + verifyOwner);
 
         String title = (verifyOwner ? "Owner" : "Listing Agent") + " - Home";
 
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
         updateUi();
 
     }
+
+
 
     private void getUserData() {
         verifyOwner = sharedpreferences.getBoolean("verifyOwner", false);
@@ -205,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        accessdisableCard.setOnClickListener(new View.OnClickListener() {
+        accessisableCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 accessdisableCard();
@@ -232,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     private void getAccessHistory() {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/history?owmail=" + userEmail;
+        String url = "" + userEmail;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -406,6 +409,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //fixed issue :: logout when clicked back
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        Log.d("MainActivity", "onBackPressed, app running in background");
+    }
+
     private void releaseAccess() {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage("Are you sure you want to release the lock access?")
@@ -480,7 +490,7 @@ public class MainActivity extends AppCompatActivity {
 
             lockAccessShareCard.setVisibility(View.GONE);
             otpSharingCard.setVisibility(View.GONE);
-            accessdisableCard.setVisibility(View.GONE);
+            accessisableCard.setVisibility(View.GONE);
             logsAccessCard.setVisibility(View.GONE);
         } else {
             ownerCard.setVisibility(View.GONE);
@@ -491,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
 
             lockAccessShareCard.setVisibility(View.VISIBLE);
             otpSharingCard.setVisibility(View.VISIBLE);
-            accessdisableCard.setVisibility(View.VISIBLE);
+            accessisableCard.setVisibility(View.VISIBLE);
             logsAccessCard.setVisibility(View.VISIBLE);
         }
     }
@@ -530,8 +540,11 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         myEditor.putBoolean("isLoggedIn", false);
                         myEditor.commit();
+                         Boolean testCommit = getIntent().getBooleanExtra("isLoggedIn", false);
+                        Log.d("MainActivity", "isLoggedIn : after" + testCommit);
                         startActivity(new Intent(MainActivity.this, OptionsActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         finish();
                     }
@@ -618,6 +631,7 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(stringRequest);
     }
+
 
     private void saveotpLock(String response) {
         try {
