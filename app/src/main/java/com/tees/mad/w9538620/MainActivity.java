@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestOwnerList() {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/listofowners";
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/listofowners";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

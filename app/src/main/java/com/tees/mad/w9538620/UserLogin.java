@@ -159,45 +159,43 @@ public class UserLogin extends AppCompatActivity {
     private void saveUserData(String response) {
         Log.d(TAG, "verifyOwner:: Userlogin:saveUserData = " + verifyOwner);
         editor.putBoolean("verifyOwner", verifyOwner);
-        editor.commit();
+        //editor.commit();
         verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
         Log.d(TAG, "verifyOwner:: after commit = " + verifyOwner);
-//        try {
-//            JSONObject sys = new JSONObject(response);
-//
-//
-//
-//            verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
-//
-//            Log.d(TAG, "verifyOwner : after" + verifyOwner);
-//
-//
+        try {
+            JSONObject sys = new JSONObject(response);
+            Log.d(TAG, "RESPONSE :: LOGIN" + response);
+
+            //  verifyOwner = getIntent().getBooleanExtra("verifyOwner", false);
+
+            //Log.d(TAG, "verifyOwner : after" + verifyOwner);
+
 //            String verifyOwnerOrAgent = sys.getString("verifyOwner");
 //            Log.d(TAG, "verifyOwner:: verifyOwnerOrAgent = " + verifyOwnerOrAgent);
-//
-//
-//            String username = sys.getString("username");
-//            String emailId = sys.getString("emailId");
-//
-//
-//            String address = "", lockdetails = "", agentCode = "";
-//            if (verifyOwner) {
-//                address = sys.getString("address");
-//                lockdetails = sys.getString("lockdetails");
-//            } else {
-//                agentCode = sys.getString("agentCode");
-//            }
-//
-//            editor.putString("username", username);
-//            editor.putString("emailId", emailId);
-//            editor.putString("address", address);
-//            editor.putString("lockdetails", lockdetails);
-//            editor.putString("agentCode", agentCode);
-//            editor.putBoolean("isLoggedIn", true);
-//            //editor.commit();
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+
+
+            String username = sys.getString("username");
+            String emailId = sys.getString("emailed");
+
+
+            String address = "", lockdetails = "", agentCode = "";
+            if (verifyOwner) {
+                address = sys.getString("address");
+                lockdetails = sys.getString("lockdetails");
+            } else {
+                agentCode = sys.getString("code");
+            }
+
+            editor.putString("username", username);
+            editor.putString("emailId", emailId);
+            editor.putString("address", address);
+            editor.putString("lockdetails", lockdetails);
+            editor.putString("agentCode", agentCode);
+            editor.putBoolean("isLoggedIn", true);
+            editor.commit();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
