@@ -1,14 +1,17 @@
 package com.tees.mad.w9538620;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -92,11 +95,16 @@ public class MainActivity extends AppCompatActivity {
     private ClipData clip;
     private int checkedItem;
     private boolean isRelease;
+    private BroadcastReceiver internetReceiver = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        internetReceiver = new internetReceiver();
+        broadcastIntent();
+
         ButterKnife.bind(this);
 
         sharedpreferences = getSharedPreferences("com.tees.mad.w9538620", Context.MODE_PRIVATE);
@@ -131,7 +139,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void broadcastIntent() {
+        registerReceiver(internetReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+       // Toast.makeText(MainActivity.this, "internetReciever called", Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(internetReceiver);
+    }
 
     private void getUserData() {
         verifyOwner = sharedpreferences.getBoolean("verifyOwner", false);
@@ -370,14 +388,14 @@ public class MainActivity extends AppCompatActivity {
     private void lockRequestCardAccess() {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/lockcreds-to-la?email="
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/ownerlockcreds?email="
                 + emailOwner + "&LAmail=" + userEmail
                 + "&LAname=" + userName;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Utils.dismissDialog();
-                Log.d("MainActivity", "success " + response);
+                Log.d("MainActivity", "lockRequestCardAccess success " + response);
                 saveLockData(response);
                 agentMailCard.setVisibility(View.VISIBLE);
                 agentPwdCard.setVisibility(View.VISIBLE);
@@ -389,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utils.dismissDialog();
-                Log.d("MainActivity", "lockRequestCardAccess error " + error);
+                Log.d("MainActivity", "lockRequestCardAccess : error " + error);
             }
         });
         requestQueue.add(stringRequest);
@@ -398,9 +416,9 @@ public class MainActivity extends AppCompatActivity {
     private void saveLockData(String response) {
         try {
             JSONObject sys = new JSONObject(response);
-            mailLock = sys.getString("mailLock");
+            mailLock = sys.getString("email");
             nameLock = sys.getString("lockdetails");
-            passLock = sys.getString("pwd");
+            passLock = sys.getString("password");
 
             nameView.setText(nameLock);
 
@@ -435,7 +453,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void lockReleaseCardAccess() {
-        requestOwnerList();
+        Log.d("MainActivity", "userEmail: " + userEmail);
+
+        deleteLockAccess(emailOwner);
+        //requestOwnerList();
+        agentMailCard.setVisibility(View.GONE);
+        agentPwdCard.setVisibility(View.GONE);
+        agentOtpCard.setVisibility(View.GONE);
+        agentNameCard.setVisibility(View.GONE);
     }
 
     private void accessdisableCard() {
@@ -459,7 +484,8 @@ public class MainActivity extends AppCompatActivity {
     private void deleteLockAccess(String mail) {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/deletecreds?email=" + mail;
+
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/removelockdetails?email=" + mail;
 
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -611,10 +637,10 @@ public class MainActivity extends AppCompatActivity {
     private void lockRequestCardOtp() {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/lockcreds-to-la?email="
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/ownerlockcreds?email="
                 + emailOwner + "&LAmail=" + userEmail
                 + "&LAname=" + userName;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Utils.dismissDialog();
@@ -626,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utils.dismissDialog();
-                Log.d("MainActivity", "lockRequestCardAccess error " + error);
+                Log.d("MainActivity", "lockRequestCardAccess error: " + error);
             }
         });
         requestQueue.add(stringRequest);
@@ -636,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveotpLock(String response) {
         try {
             JSONObject sys = new JSONObject(response);
-            otpLock = sys.getString("OTP");
+            otpLock = sys.getString("otp");
         } catch (JSONException e) {
             e.printStackTrace();
         }

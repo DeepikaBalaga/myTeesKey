@@ -19,13 +19,21 @@ git remote add main https://github.com/DeepikaBalaga/Week3_Android.git
 **commit 5:**
         -> renamed repo
 
-**commit 6: **
+**commit 6:**
 	-> fixed logout on back and login user types multicard issue
 
-c**ommit 7:**
+**commit 7:**
         -> changed list of owners api as the previous api is not having IAM permissions and so not working
         -> inorder to show profile data for the logged in user, some from shared preference and the others from the API followed by commit to preference
         -> created 3 new api's(listof owners,register agent, login agent)
 	-> changed the app name to tees superKey and added appropriate logo
 	-> fixed some api errors from the previous commit
 	-> yet to add some more multicards and UI changes as well
+
+**commit 8:**
+	-> added permissions for access network state
+	-> registered a braodcast receiver for connectivity changes(wifi & mobile data)
+	-> new api's for owner lock creds and delete access is added for agent cards
+	-> new feature to hide cards/options after lock release
+	-> changed the request url for ownerlockcreds API to GET(instead of POST)
+	-> agent UI and it's logic are done by this commit and next steps will be for Owner UI & their backend
