@@ -1,5 +1,6 @@
 package com.tees.mad.w9538620;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -41,6 +42,8 @@ public class ShareCredActivity extends AppCompatActivity {
     private boolean isCred;
     private String emailOwner,ownerName;
 
+    public String testlockmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,8 @@ public class ShareCredActivity extends AppCompatActivity {
         isCred = getIntent().getBooleanExtra("cred", false);
         emailOwner = getIntent().getStringExtra("email");
         ownerName = getIntent().getStringExtra("name");
+        testlockmail = getIntent().getStringExtra("testlockmail");
+
         ActionBar actionBar = getSupportActionBar();
 
         String title = isCred ? "Share Lock Access" : "Share Lock OTP";
@@ -117,10 +122,22 @@ public class ShareCredActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(ShareCredActivity.this);
         String url;
         if (isCred) {
-            url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/lockcreds?email=" + emailOwner
+            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/shareownerlockcreds?email=" + emailOwner
                     + "&mailLock=" + mail + "&pwd=" + pwd+ "&owname=" + ownerName;
+            SharedPreferences.Editor editor = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE).edit();
+            editor.putString("templockmail", mail);
+            editor.apply();
+            //checked whether templockmail updated or not
+//            SharedPreferences prefs = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE);
+//            String templockmail = prefs.getString("templockmail", "mail");
+//            Log.d("ShareCredActivity", "templockmail if: " + templockmail);
+
         } else {
-            url = "https://ehx4lj0yi4.execute-api.us-east-1.amazonaws.com/v1/otpSharingCard?email=" + emailOwner
+            SharedPreferences prefs = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE);
+            String templockmail = prefs.getString("templockmail", "mail");
+            Log.d("ShareCredActivity", "templockmail else: " + templockmail);
+
+            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/shareotp?email=" + emailOwner + "&mailLock=" +templockmail
                     + "&OTP=" + otpTx;
         }
         StringRequest
@@ -129,7 +146,7 @@ public class ShareCredActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Utils.dismissDialog();
                 Log.d("ShareCredActivity", "success " + response);
-                Toast.makeText(ShareCredActivity.this, "success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShareCredActivity.this, "Details shared successfully", Toast.LENGTH_SHORT).show();
                 finish();
             }
 

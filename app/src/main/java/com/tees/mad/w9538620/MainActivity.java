@@ -51,6 +51,15 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+
+import java.util.concurrent.Executor;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     @BindView(R.id.ownerInvitation)
@@ -181,14 +190,73 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //Adding biometric option
+
+        BiometricManager biometricManager = androidx.biometric.BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate()) {
+
+            // this means we can use biometric sensor
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                Toast.makeText(MainActivity.this, "You can use the fingerprint sensor to login", Toast.LENGTH_SHORT).show();
+                break;
+
+            // this means that the device doesn't have fingerprint sensor
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                Toast.makeText(MainActivity.this, "This device doesnot have a fingerprint sensor", Toast.LENGTH_SHORT).show();
+                break;
+
+            // this means that biometric sensor is not available
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                Toast.makeText(MainActivity.this, "The biometric sensor is currently unavailable", Toast.LENGTH_SHORT).show();
+                break;
+
+            // this means that the device doesn't contain your fingerprint
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                Toast.makeText(MainActivity.this, "Your device doesn't have fingerprint saved,please check your security settings", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+
+
+
+        // creating a variable for our Executor
+        Executor executor = ContextCompat.getMainExecutor(this);
+        // this will give us result of AUTHENTICATION
+        final BiometricPrompt biometricPrompt = new BiometricPrompt(MainActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+            }
+
+            // THIS METHOD IS CALLED WHEN AUTHENTICATION IS SUCCESS
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+        });
+
+        // creating a variable for our promptInfo
+        // BIOMETRIC DIALOG
+
+        // reference URL https://www.geeksforgeeks.org/how-to-add-fingerprint-authentication-in-your-android-app/
+        final BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("Tees SuperKey")
+                .setDescription("Use your fingerprint to unlock the door").setNegativeButtonText("Cancel").build();
         lockStatusCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://alexa.amazon.com";
-                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                builder.setToolbarColor(ContextCompat.getColor(MainActivity.this, R.color.purple_700));
-                CustomTabsIntent customTabsIntent = builder.build();
-                customTabsIntent.launchUrl(MainActivity.this, Uri.parse(url));
+//                String url = "https://alexa.amazon.com";
+//                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+//                builder.setToolbarColor(ContextCompat.getColor(MainActivity.this, R.color.purple_700));
+//                CustomTabsIntent customTabsIntent = builder.build();
+//                customTabsIntent.launchUrl(MainActivity.this, Uri.parse(url));
+                biometricPrompt.authenticate(promptInfo);
+
             }
         });
 
