@@ -42,3 +42,7 @@ git remote add main https://github.com/DeepikaBalaga/Week3_Android.git
 	-> added fingerprint to lock/unlock door feature
 	-> reference url for biometric - https://www.geeksforgeeks.org/how-to-add-fingerprint-authentication-in-your-android-app/
 	-> updated some api's as per their usage for latest features
+**commit 10:**
+	-> modified fingerprint authentication as required
+	-> updated owner's disable lock access feature
+	-> added access history api but not completed due to date response parsing from lambda

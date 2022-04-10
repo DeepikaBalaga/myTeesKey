@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private String userName, userEmail, userType, agentCode, userAddress, userLock;
     private ClipboardManager clipboard;
     private ClipData clip;
-    private int checkedItem;
+    private int checkedItem, buttonClickCount, btnDisableClickCount;
     private boolean isRelease;
     private BroadcastReceiver internetReceiver = null;
 
@@ -198,22 +198,22 @@ public class MainActivity extends AppCompatActivity {
 
             // this means we can use biometric sensor
             case BiometricManager.BIOMETRIC_SUCCESS:
-                Toast.makeText(MainActivity.this, "You can use the fingerprint sensor to login", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "You can use the fingerprint sensor to login");
                 break;
 
             // this means that the device doesn't have fingerprint sensor
             case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-                Toast.makeText(MainActivity.this, "This device doesnot have a fingerprint sensor", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "This device doesnot have a fingerprint sensor");
                 break;
 
             // this means that biometric sensor is not available
             case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-                Toast.makeText(MainActivity.this, "The biometric sensor is currently unavailable", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "The biometric sensor is currently unavailable");
                 break;
 
             // this means that the device doesn't contain your fingerprint
             case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-                Toast.makeText(MainActivity.this, "Your device doesn't have fingerprint saved,please check your security settings", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Your device doesn't have fingerprint saved,please check your security settings");
                 break;
         }
 
@@ -233,7 +233,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
+                // issue fixed: before using fingerprint authentication for unlocking, toast message used to display, now fixed
+                if(buttonClickCount == 1)
+                    Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "Door Already Unlocked", Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onAuthenticationFailed() {
@@ -250,13 +254,12 @@ public class MainActivity extends AppCompatActivity {
         lockStatusCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String url = "https://alexa.amazon.com";
-//                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-//                builder.setToolbarColor(ContextCompat.getColor(MainActivity.this, R.color.purple_700));
-//                CustomTabsIntent customTabsIntent = builder.build();
-//                customTabsIntent.launchUrl(MainActivity.this, Uri.parse(url));
                 biometricPrompt.authenticate(promptInfo);
-
+                buttonClickCount++;
+                if(buttonClickCount == 1)
+                    Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "Door Already Unlocked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -321,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
     private void getAccessHistory() {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "" + userEmail;
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/locklogs?mail=" + userEmail;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -349,8 +352,9 @@ public class MainActivity extends AppCompatActivity {
             jArray = new JSONArray(response);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject oneObject = jArray.getJSONObject(i);
-                String log = "\nListing Agent : " + oneObject.getString("LAname") + "\nAgent Email : "
-                        + oneObject.getString("LAmail") + "\nDate & Time : "
+                //date field from response is not able to retrieve
+                String log = "\nListing Agent : " + oneObject.getString("username") + "\nAgent Email : "
+                        + oneObject.getString("emailed") + "\nDate & Time : "
                         + oneObject.getString("date") + "\n";
                 history.add(log);
             }
@@ -459,6 +463,10 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/ownerlockcreds?email="
                 + emailOwner + "&LAmail=" + userEmail
                 + "&LAname=" + userName;
+        SharedPreferences.Editor editor = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE).edit();
+        editor.putString("tempemailOwner", emailOwner);
+        editor.apply();
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -487,7 +495,6 @@ public class MainActivity extends AppCompatActivity {
             mailLock = sys.getString("email");
             nameLock = sys.getString("lockdetails");
             passLock = sys.getString("password");
-
             nameView.setText(nameLock);
 
         } catch (JSONException e) {
@@ -536,7 +543,10 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Are you sure you disable lock access to mytees?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteLockAccess(userEmail);
+                        SharedPreferences prefs = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE);
+                        String tempemailOwner = prefs.getString("tempemailOwner", "");
+                        Log.d("MainActivity", " accessdisableCard :: tempemailOwner:  " + tempemailOwner);
+                        deleteLockAccess(tempemailOwner);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -549,11 +559,11 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void deleteLockAccess(String mail) {
+    private void deleteLockAccess(String tempemailOwner) {
         Utils.showDialog(MainActivity.this);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
-        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/removelockdetails?email=" + mail;
+        String url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/removelockdetails?tempemailOwner=" + tempemailOwner;
 
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -561,7 +571,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         Utils.dismissDialog();
                         Log.d("MainActivity", "Lock access disabled " + response);
-                        Toast.makeText(MainActivity.this, "Lock access disabled", Toast.LENGTH_SHORT).show();
+                        btnDisableClickCount++;
+                        if(btnDisableClickCount == 1)
+                            Toast.makeText(MainActivity.this, "Lock access disabled", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Lock access Already disabled", Toast.LENGTH_SHORT).show();
                     }
 
                 }, new Response.ErrorListener() {

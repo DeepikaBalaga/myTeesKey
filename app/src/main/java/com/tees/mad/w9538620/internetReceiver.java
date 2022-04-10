@@ -33,7 +33,6 @@ public class internetReceiver extends BroadcastReceiver {
                 Log.d("clickedbutton","yes");
                 Intent i = new Intent(context, MainActivity.class);
                 context.startActivity(i);
-
             }
         });
         Log.d("network",status);
@@ -41,7 +40,6 @@ public class internetReceiver extends BroadcastReceiver {
             status="No Internet Connection";
             dialog.show();
         }
-
-        Toast.makeText(context, status, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, status, Toast.LENGTH_LONG).show();
     }
 }
