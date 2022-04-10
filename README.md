@@ -37,11 +37,13 @@ git remote add main https://github.com/DeepikaBalaga/Week3_Android.git
 	-> new feature to hide cards/options after lock release
 	-> changed the request url for ownerlockcreds API to GET(instead of POST)
 	-> agent UI and it's logic are done by this commit and next steps will be for Owner UI & their backend
+
 **commit 9:**
 	-> Added feature contents for usertype owner(share lockdetails & otp)
 	-> added fingerprint to lock/unlock door feature
 	-> reference url for biometric - https://www.geeksforgeeks.org/how-to-add-fingerprint-authentication-in-your-android-app/
 	-> updated some api's as per their usage for latest features
+
 **commit 10:**
 	-> modified fingerprint authentication as required
 	-> updated owner's disable lock access feature
