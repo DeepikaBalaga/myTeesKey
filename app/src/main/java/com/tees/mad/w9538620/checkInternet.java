@@ -1,8 +1,9 @@
 package com.tees.mad.w9538620;
 
 import android.content.Context;
-        import android.net.ConnectivityManager;
-        import android.net.NetworkInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 class checkInternet {
 
     public static String getConnectivityStatusString(Context context) {

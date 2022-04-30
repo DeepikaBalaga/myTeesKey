@@ -48,3 +48,9 @@ git remote add main https://github.com/DeepikaBalaga/Week3_Android.git
 	-> modified fingerprint authentication as required
 	-> updated owner's disable lock access feature
 	-> added access history api but not completed due to date response parsing from lambda
+**commit 11:**
+	-> Readme changes only
+
+**commit 11:**
+	-> Code cleanup, remove unnecessary imports, code reformattings and follow Android standard coding guidelines
+	-> update jar repositories

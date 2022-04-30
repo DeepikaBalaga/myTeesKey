@@ -51,10 +51,10 @@ public class HelpActivity extends AppCompatActivity {
         ll_dots = findViewById(R.id.ll_dots);
         slider_image_list = new ArrayList<>();
 
-        if(verifyOwner) {
+        if (verifyOwner) {
             slider_image_list.add("one");
             slider_image_list.add("two");
-        }else {
+        } else {
             slider_image_list.add("one");
             slider_image_list.add("two");
             slider_image_list.add("three");

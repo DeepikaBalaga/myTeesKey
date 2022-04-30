@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 
 public class ShareCredActivity extends AppCompatActivity {
 
+    public String testlockmail;
     @BindView(R.id.layout_email)
     TextInputLayout layoutEmail;
     @BindView(R.id.layout_pass)
@@ -38,11 +39,8 @@ public class ShareCredActivity extends AppCompatActivity {
     TextInputEditText pass;
     @BindView(R.id.otp)
     TextInputEditText otp;
-
     private boolean isCred;
-    private String emailOwner,ownerName;
-
-    public String testlockmail;
+    private String emailOwner, ownerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +121,7 @@ public class ShareCredActivity extends AppCompatActivity {
         String url;
         if (isCred) {
             url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/shareownerlockcreds?email=" + emailOwner
-                    + "&mailLock=" + mail + "&pwd=" + pwd+ "&owname=" + ownerName;
+                    + "&mailLock=" + mail + "&pwd=" + pwd + "&owname=" + ownerName;
             SharedPreferences.Editor editor = getSharedPreferences("com.tees.mad.w9538620", MODE_PRIVATE).edit();
             editor.putString("templockmail", mail);
             editor.apply();
@@ -137,7 +135,7 @@ public class ShareCredActivity extends AppCompatActivity {
             String templockmail = prefs.getString("templockmail", "mail");
             Log.d("ShareCredActivity", "templockmail else: " + templockmail);
 
-            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/shareotp?email=" + emailOwner + "&mailLock=" +templockmail
+            url = "https://2k4ie3stjg.execute-api.us-east-1.amazonaws.com/v1/shareotp?email=" + emailOwner + "&mailLock=" + templockmail
                     + "&OTP=" + otpTx;
         }
         StringRequest

@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class SliderPagerAdapter extends PagerAdapter {
+    private final boolean verifyOwner;
     Activity activity;
     ArrayList<String> image_arraylist;
     private LayoutInflater layoutInflater;
-    private final boolean verifyOwner;
 
     public SliderPagerAdapter(Activity activity, ArrayList<String> image_arraylist, boolean verifyOwner) {
         this.activity = activity;

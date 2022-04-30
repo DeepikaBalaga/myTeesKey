@@ -27,9 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
@@ -47,18 +50,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricManager;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
-
-import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -150,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void broadcastIntent() {
         registerReceiver(internetReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-       // Toast.makeText(MainActivity.this, "internetReciever called", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(MainActivity.this, "internetReciever called", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -218,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         // creating a variable for our Executor
         Executor executor = ContextCompat.getMainExecutor(this);
         // this will give us result of AUTHENTICATION
@@ -234,11 +227,12 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 // issue fixed: before using fingerprint authentication for unlocking, toast message used to display, now fixed
-                if(buttonClickCount == 1)
+                if (buttonClickCount == 1)
                     Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getApplicationContext(), "Door Already Unlocked", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
@@ -256,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 biometricPrompt.authenticate(promptInfo);
                 buttonClickCount++;
-                if(buttonClickCount == 1)
+                if (buttonClickCount == 1)
                     Toast.makeText(getApplicationContext(), "Door Unlocked", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getApplicationContext(), "Door Already Unlocked", Toast.LENGTH_SHORT).show();
@@ -572,7 +566,7 @@ public class MainActivity extends AppCompatActivity {
                         Utils.dismissDialog();
                         Log.d("MainActivity", "Lock access disabled " + response);
                         btnDisableClickCount++;
-                        if(btnDisableClickCount == 1)
+                        if (btnDisableClickCount == 1)
                             Toast.makeText(MainActivity.this, "Lock access disabled", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(MainActivity.this, "Lock access Already disabled", Toast.LENGTH_SHORT).show();
@@ -651,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
 
                         myEditor.putBoolean("isLoggedIn", false);
                         myEditor.commit();
-                         Boolean testCommit = getIntent().getBooleanExtra("isLoggedIn", false);
+                        Boolean testCommit = getIntent().getBooleanExtra("isLoggedIn", false);
                         Log.d("MainActivity", "isLoggedIn : after" + testCommit);
                         startActivity(new Intent(MainActivity.this, OptionsActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         finish();

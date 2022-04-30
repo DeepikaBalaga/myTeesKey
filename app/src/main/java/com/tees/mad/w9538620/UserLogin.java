@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.tees.mad.w9538620.MainActivity;
-
 public class UserLogin extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
