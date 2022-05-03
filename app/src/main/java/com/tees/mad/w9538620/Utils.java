@@ -22,5 +22,4 @@ public class Utils {
             dialogProgress = null;
         }
     }
-
 }

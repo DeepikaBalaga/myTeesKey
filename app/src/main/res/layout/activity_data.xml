@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ON YOUR DATA AND HIT RESTART"
+        android:text="Turnon internet or Click Restart for offline mode"
         android:textColor="#FFF"
         android:textSize="15sp"
         android:layout_marginBottom="10dp"

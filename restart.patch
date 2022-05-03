@@ -1,0 +1,48 @@
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+index 5a3fcde..b675e83 100644
+--- a/.idea/deploymentTargetDropDown.xml
++++ b/.idea/deploymentTargetDropDown.xml
+@@ -12,6 +12,6 @@
+         </deviceKey>
+       </Target>
+     </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2022-04-13T11:48:42.829600Z" />
++    <timeTargetWasSelectedWithDropDown value="2022-05-02T12:57:08.919886Z" />
+   </component>
+ </project>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+index 4c1dd8e..f0eb208 100644
+--- a/.idea/misc.xml
++++ b/.idea/misc.xml
+@@ -6,5 +6,5 @@
+     <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
+     <option name="OPTION_DOCUMENT_TAG_VERSION" value="true" />
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+ </project>
+\ No newline at end of file
+diff --git a/app/src/main/java/com/tees/mad/w9538620/Utils.java b/app/src/main/java/com/tees/mad/w9538620/Utils.java
+index 0e82f15..f431a6b 100644
+--- a/app/src/main/java/com/tees/mad/w9538620/Utils.java
++++ b/app/src/main/java/com/tees/mad/w9538620/Utils.java
+@@ -22,5 +22,4 @@ public class Utils {
+             dialogProgress = null;
+         }
+     }
+-
+ }
+diff --git a/app/src/main/res/layout/activity_data.xml b/app/src/main/res/layout/activity_data.xml
+index 398a926..7daa801 100644
+--- a/app/src/main/res/layout/activity_data.xml
++++ b/app/src/main/res/layout/activity_data.xml
+@@ -32,7 +32,7 @@
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+-        android:text="ON YOUR DATA AND HIT RESTART"
++        android:text="Turnon internet or Click Restart for offline mode"
+         android:textColor="#FFF"
+         android:textSize="15sp"
+         android:layout_marginBottom="10dp"

@@ -1,3 +1,12 @@
+Instructions to Download and Install?
+1. Goto https://github.com/DeepikaBalaga/myTeesKey
+2. Https clone url - https://github.com/DeepikaBalaga/myTeesKey.git OR simply download zip code
+3. unzip the files, open android studio
+4. Open App folder in android studio
+5. Change SDK Path appropriately. On mac, sdk.dir=/Users/deepikabalaga/Library/Android/sdk
+5. Build and Run the app. Everything should work...
+
+
 # Week3_Android - create repository feb 10
 **commit 2:** setup remote repo and push the modified readme for test
 
@@ -51,6 +60,9 @@ git remote add main https://github.com/DeepikaBalaga/Week3_Android.git
 **commit 11:**
 	-> Readme changes only
 
-**commit 11:**
+**commit 12:**
 	-> Code cleanup, remove unnecessary imports, code reformattings and follow Android standard coding guidelines
 	-> update jar repositories
+**commit 13:**
+	-> Update offline mode button and text changes as the functionality added but missed name changes in earlier patch.
+	-> Updated README with instructions to download and install the application
